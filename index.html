@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KBM Exim International</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --steel:#0a1628;--steel2:#0f2040;--steel3:#1a3058;
+  --accent:#00c853;--accent2:#00e676;--copper:#f57c00;
+  --silver:#b0bec5;--lightsilver:#cfd8dc;--white:#f0f4f8;
+  --text-muted:#78909c;--border:#1e3a5f;--card:#0d1f38;--card2:#112236;
+  --wa:#25d366;--danger:#ef5350;
+}
+body{font-family:'Exo 2',sans-serif;background:#0a1628;color:#f0f4f8;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.app-shell{width:430px;height:100vh;max-height:900px;position:relative;overflow:hidden;background:var(--steel);box-shadow:0 0 80px rgba(0,0,0,.8)}
+@media(min-width:600px){
+  body{background:#05101f;padding:20px 0}
+  .app-shell{border-radius:40px;height:90vh;max-height:860px;box-shadow:0 40px 100px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.06)}
+}
+.screen{position:absolute;inset:0;overflow-y:auto;padding-bottom:72px;display:none;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.screen::-webkit-scrollbar{display:none}
+.screen.active{display:block}
+
+/* NAV */
+.nav-bar{position:absolute;bottom:0;left:0;right:0;background:rgba(10,22,40,.97);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 0 12px;z-index:500;backdrop-filter:blur(16px)}
+@media(min-width:600px){.nav-bar{border-radius:0 0 40px 40px}}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 10px;border:none;background:none;opacity:.5;transition:opacity .2s}
+.nav-btn.active{opacity:1}
+.nav-btn svg{width:22px;height:22px;display:block}
+.nav-lbl{font-size:10px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--silver)}
+.nav-btn.active .nav-lbl{color:var(--accent)}
+
+/* HERO */
+.hero{position:relative;height:300px;overflow:hidden;background:linear-gradient(160deg,#0a1628 0%,#0f2a50 60%,#0a1628 100%)}
+@media(min-width:600px){.hero{border-radius:40px 40px 0 0}}
+.hero-svg-bg{position:absolute;bottom:0;left:0;width:100%;opacity:.18;pointer-events:none}
+.hero-hex{position:absolute;opacity:.1;pointer-events:none}
+.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:16px}
+.logo-badge{width:66px;height:66px;border-radius:16px;background:linear-gradient(135deg,var(--accent),#007b33);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:12px;box-shadow:0 0 28px rgba(0,200,83,.3)}
+.hero h1{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;letter-spacing:1px;line-height:1.2;color:#fff}
+.hero h1 span{color:var(--accent)}
+.hero-tag{font-size:11px;color:var(--silver);letter-spacing:2px;text-transform:uppercase;margin-top:7px;font-family:'Rajdhani',sans-serif}
+.hero-stats{display:flex;gap:20px;margin-top:14px}
+.hstat-val{font-family:'Rajdhani',sans-serif;font-size:19px;font-weight:700;color:var(--accent);text-align:center}
+.hstat-lbl{font-size:10px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;text-align:center}
+.feat-strip{display:flex;gap:8px;padding:12px 14px 6px;overflow-x:auto;scrollbar-width:none}
+.feat-strip::-webkit-scrollbar{display:none}
+.feat-pill{background:var(--card2);border:1px solid var(--border);border-radius:30px;padding:6px 13px;white-space:nowrap;font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.8px;color:var(--silver);display:flex;align-items:center;gap:5px;flex-shrink:0}
+.fpill-dot{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.sec-title{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--silver);padding:14px 14px 8px;display:flex;align-items:center;gap:8px}
+.sec-title::before{content:'';display:block;width:4px;height:14px;background:var(--accent);border-radius:2px;flex-shrink:0}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px}
+.cat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 12px;cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.cat-card:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 8px 24px rgba(0,200,83,.12)}
+.cat-card:active{transform:scale(.97)}
+.cat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0}
+.cat-card.c-bolts::before{background:linear-gradient(90deg,#f57c00,#ff9800)}
+.cat-card.c-nuts::before{background:linear-gradient(90deg,#1565c0,#1976d2)}
+.cat-card.c-washers::before{background:linear-gradient(90deg,#6a1b9a,#8e24aa)}
+.cat-card.c-blades::before{background:linear-gradient(90deg,#2e7d32,#388e3c)}
+.cat-icon{font-size:28px;margin-bottom:7px}
+.cat-name{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:2px}
+.cat-count{font-size:10px;color:var(--text-muted)}
+.cat-arr{position:absolute;right:11px;bottom:11px;width:19px;height:19px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:#000;font-weight:700}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 14px}
+.why-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;transition:border-color .2s}
+.why-card:hover{border-color:rgba(0,200,83,.4)}
+.why-icon{font-size:20px;margin-bottom:5px}
+.why-title{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:#fff;margin-bottom:2px}
+.why-desc{font-size:10px;color:var(--text-muted);line-height:1.4}
+
+/* ABOUT */
+.about-hero{background:linear-gradient(160deg,#0a1628,#0d2040);padding:26px 18px;text-align:center}
+.about-hero h2{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;margin-bottom:5px}
+.about-hero p{color:var(--silver);font-size:12px;line-height:1.6}
+.metrics-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin:12px 14px;border-radius:12px;overflow:hidden}
+.metric-box{background:var(--card);padding:13px;text-align:center}
+.metric-val{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--accent)}
+.metric-lbl{font-size:9px;color:var(--text-muted);letter-spacing:.5px;margin-top:2px}
+.about-sec{margin:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:15px}
+.about-sec h3{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px;letter-spacing:1px;text-transform:uppercase}
+.about-sec p{font-size:12px;color:var(--lightsilver);line-height:1.7}
+.val-list{list-style:none;margin-top:10px}
+.val-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--lightsilver);padding:6px 0;border-bottom:1px solid var(--border)}
+.val-list li:last-child{border-bottom:none}
+.val-list li::before{content:'⬡';color:var(--accent);font-size:12px;flex-shrink:0}
+.cert-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.cert-badge{background:var(--steel3);border:1px solid var(--accent);border-radius:7px;padding:4px 10px;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;color:var(--accent);letter-spacing:1px}
+
+/* PRODUCTS */
+.prod-header{padding:18px 16px 0;background:linear-gradient(160deg,#0a1628,#0d2040)}
+.cat-tabs-row{display:flex;gap:7px;padding:12px 14px 8px;overflow-x:auto;scrollbar-width:none}
+.cat-tabs-row::-webkit-scrollbar{display:none}
+.cat-tab-btn{background:var(--card);border:1px solid var(--border);border-radius:30px;padding:7px 14px;white-space:nowrap;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:.8px;cursor:pointer;transition:all .18s;color:var(--silver);flex-shrink:0}
+.cat-tab-btn.active{background:var(--accent);border-color:var(--accent);color:#000}
+.prod-cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px}
+.prod-card{background:var(--card);border:1px solid var(--border);border-radius:13px;overflow:hidden;cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s;-webkit-tap-highlight-color:transparent}
+.prod-card:hover{transform:translateY(-2px);border-color:rgba(0,200,83,.5);box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.prod-card:active{transform:scale(.97)}
+.prod-card-img{height:80px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d2040,#1a3058);font-size:38px;position:relative}
+.prod-card-badge{position:absolute;top:6px;right:6px;background:rgba(0,200,83,.15);border:1px solid rgba(0,200,83,.3);border-radius:6px;padding:2px 7px;font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;color:var(--accent);letter-spacing:.5px}
+.prod-card-body{padding:9px 10px 10px}
+.prod-card-name{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:#fff;margin-bottom:2px;line-height:1.2}
+.prod-card-desc{font-size:10px;color:var(--text-muted);line-height:1.3;margin-bottom:7px;min-height:24px}
+.prod-card-price{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.prod-price-val{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--accent)}
+.prod-price-unit{font-size:9px;color:var(--text-muted)}
+.prod-card-btn{background:transparent;border:1px solid var(--accent);border-radius:7px;padding:4px 0;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;color:var(--accent);cursor:pointer;width:100%;transition:all .18s;letter-spacing:.5px}
+.prod-card-btn:hover,.prod-card-btn:active{background:var(--accent);color:#000}
+.table-section{margin:14px 14px 0}
+.table-sec-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.table-sec-head::before{content:'';display:block;width:3px;height:16px;background:var(--accent);border-radius:2px;flex-shrink:0}
+.table-sec-title{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--silver)}
+.note-box{background:rgba(0,200,83,.06);border:1px solid rgba(0,200,83,.18);border-radius:10px;padding:9px 12px;margin-bottom:10px;font-size:11px;color:var(--silver);line-height:1.5}
+.note-box strong{color:var(--accent);font-family:'Rajdhani',sans-serif}
+.price-table-wrap{overflow-x:auto;border-radius:11px;border:1px solid var(--border);scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.price-table-wrap::-webkit-scrollbar{height:4px}
+.price-table-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.price-table{width:100%;border-collapse:collapse;font-size:11px;min-width:520px}
+.price-table thead tr{background:var(--card2)}
+.price-table th{padding:9px 10px;text-align:left;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--silver);border-bottom:1px solid var(--border);white-space:nowrap}
+.price-table tbody tr{border-bottom:1px solid rgba(30,58,95,.5);transition:background .15s}
+.price-table tbody tr:last-child{border-bottom:none}
+.price-table tbody tr:hover{background:rgba(0,200,83,.04)}
+.price-table td{padding:8px 10px;vertical-align:middle;color:var(--lightsilver);font-size:11px}
+.price-table td:first-child{font-family:'Rajdhani',sans-serif;font-weight:700;color:#fff;font-size:11px;white-space:nowrap}
+.price-cell{font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--accent);white-space:nowrap;font-size:12px}
+.grade-badge{display:inline-block;background:rgba(0,200,83,.1);border:1px solid rgba(0,200,83,.25);border-radius:4px;padding:1px 5px;font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;color:var(--accent);margin:1px 1px 1px 0;white-space:nowrap}
+.mat-ms{color:#90caf9}.mat-ht{color:#ffcc02}.mat-ss{color:#80cbc4}.mat-boron{color:#ce93d8}
+.group-head{background:linear-gradient(90deg,rgba(0,200,83,.09),rgba(0,200,83,.01)) !important}
+.group-head td{padding:9px 10px 5px !important;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;color:#e8e8e8 !important;border-bottom:1px solid var(--border) !important}
+.blade-card{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.blade-card-head{padding:11px 13px;background:var(--card2);border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.blade-name{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#fff}
+.blade-price-tag{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--accent);white-space:nowrap;padding-top:1px}
+.blade-specs{display:grid;grid-template-columns:1fr 1fr}
+.blade-spec{padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
+.blade-spec:nth-child(even){border-right:none}
+.blade-spec-label{font-size:9px;color:var(--text-muted);letter-spacing:.5px;margin-bottom:2px;text-transform:uppercase}
+.blade-spec-val{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;color:var(--lightsilver)}
+.hardness-bar{height:3px;border-radius:2px;background:linear-gradient(90deg,var(--accent),#f57c00);margin-top:4px}
+.tag-heavy{display:inline-block;background:rgba(245,124,0,.15);border:1px solid rgba(245,124,0,.35);color:#f57c00;font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:.5px;margin-top:3px}
+.tag-imported{display:inline-block;background:rgba(206,147,216,.15);border:1px solid rgba(206,147,216,.35);color:#ce93d8;font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:.5px;margin-left:4px;margin-top:3px}
+.blade-desc{padding:9px 12px;font-size:11px;color:var(--silver);line-height:1.5;border-bottom:1px solid var(--border)}
+.blade-footer{padding:8px 12px;background:var(--card2);display:flex;align-items:center;justify-content:space-between}
+.get-quote-btn{background:transparent;border:1px solid var(--wa);border-radius:7px;padding:5px 14px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;color:var(--wa);cursor:pointer;transition:all .18s;letter-spacing:.5px}
+.get-quote-btn:hover,.get-quote-btn:active{background:var(--wa);color:#000}
+
+/* DETAIL OVERLAY */
+.detail-overlay{position:absolute;inset:0;background:var(--steel);z-index:400;overflow-y:auto;display:none;-webkit-overflow-scrolling:touch;padding-bottom:30px;scrollbar-width:none}
+.detail-overlay::-webkit-scrollbar{display:none}
+.detail-overlay.active{display:block}
+.detail-top-bar{background:linear-gradient(160deg,#0a1628,#0d2040);padding:14px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px}
+.back-btn{display:inline-flex;align-items:center;gap:5px;color:var(--accent);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;cursor:pointer;background:none;border:none;padding:4px 0;white-space:nowrap}
+.back-btn:hover{color:var(--accent2)}
+.detail-img-box{height:160px;background:linear-gradient(135deg,#0d2040,#1a3058);display:flex;align-items:center;justify-content:center;font-size:75px;margin:14px;border-radius:14px;border:1px solid var(--border)}
+.detail-name{font-family:'Rajdhani',sans-serif;font-size:21px;font-weight:700;color:#fff;margin:0 14px 4px}
+.detail-cat-badge{font-size:10px;color:var(--accent);letter-spacing:2px;font-family:'Rajdhani',sans-serif;font-weight:700;margin:0 14px 12px;padding:3px 12px;background:rgba(0,200,83,.1);border-radius:20px;display:inline-block}
+.detail-price-row{margin:0 14px 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dprice-box{background:linear-gradient(135deg,rgba(0,200,83,.12),rgba(0,200,83,.04));border:1px solid rgba(0,200,83,.28);border-radius:11px;padding:12px}
+.dprice-label{font-size:9px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px}
+.dprice-val{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:var(--accent)}
+.dprice-sub{font-size:9px;color:var(--silver);margin-top:2px}
+.d-section{margin:8px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.d-sec-head{padding:9px 13px;background:var(--card2);border-bottom:1px solid var(--border);font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--silver)}
+.spec-row{display:flex;justify-content:space-between;align-items:center;padding:8px 13px;border-bottom:1px solid var(--border)}
+.spec-row:last-child{border-bottom:none}
+.spec-label{font-size:11px;color:var(--text-muted)}
+.spec-val{font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:600;color:var(--white);text-align:right;max-width:60%}
+.inq-form{margin:8px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+.inq-form h3{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--silver);margin-bottom:11px;display:flex;align-items:center;gap:6px}
+
+/* FORMS */
+.f-field{margin-bottom:9px}
+.f-field label{display:block;font-size:10px;color:var(--text-muted);margin-bottom:4px;letter-spacing:.5px;text-transform:uppercase}
+.f-field input,.f-field textarea{width:100%;background:var(--steel2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--white);font-size:12px;font-family:'Exo 2',sans-serif;outline:none;transition:border-color .2s}
+.f-field input:focus,.f-field textarea:focus{border-color:var(--accent)}
+.f-field textarea{resize:none;height:70px}
+.submit-btn-full{width:100%;background:var(--accent);border:none;border-radius:10px;padding:12px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#000;cursor:pointer;letter-spacing:1px;margin-top:4px;transition:background .18s;display:flex;align-items:center;justify-content:center;gap:6px}
+.submit-btn-full:hover,.submit-btn-full:active{background:var(--accent2)}
+.submit-btn-full.wa-green{background:var(--wa)}
+.submit-btn-full.wa-green:hover,.submit-btn-full.wa-green:active{background:#20bd5a}
+.wa-quick-btn{background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);border-radius:10px;padding:10px 8px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--wa);cursor:pointer;transition:all .18s;letter-spacing:.5px;width:100%}
+.wa-quick-btn:hover,.wa-quick-btn:active{background:var(--wa);color:#000}
+
+/* REVIEWS */
+.rev-hero{background:linear-gradient(160deg,#0a1628,#0d2040);padding:24px 18px 16px}
+.rev-hero h2{font-family:'Rajdhani',sans-serif;font-size:21px;font-weight:700;margin-bottom:12px}
+.rating-big{font-family:'Rajdhani',sans-serif;font-size:46px;font-weight:700;color:var(--accent);line-height:1}
+.stars-row{display:flex;gap:3px;margin:4px 0;font-size:14px;color:#f57c00}
+
+/* Star picker */
+.star-pick{font-size:28px;color:var(--border);cursor:pointer;transition:color .15s,transform .1s;display:inline-block;line-height:1}
+.star-pick.active{color:#f57c00}
+.star-pick:hover{transform:scale(1.2)}
+
+/* Auth bar */
+.auth-user-bar{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between}
+.auth-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.auth-name{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:#fff}
+.auth-role{font-size:10px;color:var(--text-muted)}
+.logout-btn{background:rgba(239,83,80,.1);border:1px solid rgba(239,83,80,.3);border-radius:8px;padding:5px 12px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;color:#ef5350;cursor:pointer;transition:all .18s;letter-spacing:.5px}
+.logout-btn:hover{background:#ef5350;color:#fff}
+
+/* Review cards */
+.review-card{background:var(--card);border:1px solid var(--border);border-radius:12px;margin:0 14px 10px;padding:13px;transition:border-color .18s;position:relative}
+.review-card:hover{border-color:rgba(0,200,83,.4)}
+.review-card.user-review{border-color:rgba(0,200,83,.35);background:linear-gradient(135deg,rgba(0,200,83,.05),var(--card))}
+.rev-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.rev-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.rev-name{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#fff}
+.rev-role{font-size:10px;color:var(--text-muted)}
+.rev-stars{font-size:13px;color:#f57c00;margin-top:2px}
+.rev-text{font-size:12px;color:var(--lightsilver);line-height:1.6;border-top:1px solid var(--border);padding-top:8px}
+.verified{display:inline-flex;align-items:center;gap:3px;background:rgba(0,200,83,.1);color:var(--accent);font-size:9px;padding:2px 7px;border-radius:20px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.5px;margin-top:7px}
+.new-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(245,124,0,.12);color:var(--copper);font-size:9px;padding:2px 7px;border-radius:20px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.5px;margin-top:7px;margin-left:4px}
+.del-review-btn{position:absolute;top:10px;right:10px;background:rgba(239,83,80,.1);border:1px solid rgba(239,83,80,.2);border-radius:6px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;transition:all .18s;color:#ef5350}
+.del-review-btn:hover{background:#ef5350;color:#fff}
+
+/* Write review panel */
+.write-review-box{background:var(--card);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin:0 14px 10px}
+.write-review-head{padding:11px 14px;background:var(--card2);border-bottom:1px solid var(--border);font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--silver)}
+.write-review-body{padding:14px}
+.login-prompt-box{margin:0 14px 10px;background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px;text-align:center}
+
+/* LOGIN MODAL */
+.modal-overlay{display:none;position:absolute;inset:0;background:rgba(5,10,20,.93);z-index:600;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--card);border:1px solid var(--border);border-radius:20px;width:100%;max-width:380px;overflow:hidden;animation:fadeUp .25s ease}
+.modal-header{padding:15px 16px;background:var(--card2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#fff}
+.modal-close{background:none;border:none;color:var(--text-muted);font-size:20px;cursor:pointer;line-height:1;padding:0 4px;transition:color .15s}
+.modal-close:hover{color:#fff}
+.auth-tabs{display:flex;border-bottom:1px solid var(--border)}
+.auth-tab{flex:1;padding:11px;background:none;border:none;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--text-muted);cursor:pointer;letter-spacing:.5px;transition:all .18s;border-bottom:2px solid transparent}
+.auth-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(0,200,83,.04)}
+.auth-form-wrap{padding:16px}
+.err-msg{font-size:11px;color:var(--danger);margin-bottom:8px;padding:7px 10px;background:rgba(239,83,80,.08);border:1px solid rgba(239,83,80,.2);border-radius:7px;display:none}
+.err-msg.show{display:block}
+
+/* CONTACT */
+.contact-hero{background:linear-gradient(160deg,#0a1628,#0d2040);padding:26px 18px;text-align:center}
+.contact-hero h2{font-family:'Rajdhani',sans-serif;font-size:21px;font-weight:700;margin-bottom:5px}
+.contact-hero p{font-size:12px;color:var(--silver)}
+.contact-card{background:var(--card);border:1px solid var(--border);border-radius:12px;margin:12px 14px;overflow:hidden}
+.contact-item{display:flex;align-items:center;gap:12px;padding:13px;border-bottom:1px solid var(--border)}
+.contact-item:last-child{border-bottom:none}
+.ci-icon{width:37px;height:37px;border-radius:9px;background:rgba(0,200,83,.1);border:1px solid rgba(0,200,83,.2);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.ci-lbl{font-size:10px;color:var(--text-muted);margin-bottom:2px}
+.ci-val{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:#fff}
+.contact-form-box{margin:0 14px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:15px}
+.contact-form-box h3{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;color:var(--silver);margin-bottom:12px;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+
+/* TOAST */
+.toast{position:absolute;top:16px;left:50%;transform:translateX(-50%) translateY(-90px);background:var(--accent);color:#000;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;padding:10px 22px;border-radius:30px;z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.error{background:var(--danger);color:#fff}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeUp .3s ease both}
+</style>
+</head>
+<body>
+<div class="app-shell" id="app">
+
+<!-- ══ HOME ══ -->
+<div class="screen active" id="s-home">
+  <div class="hero">
+    <svg class="hero-svg-bg" viewBox="0 0 430 140"><rect x="15" y="55" width="55" height="85" fill="#fff"/><rect x="80" y="35" width="75" height="105" fill="#fff"/><rect x="165" y="60" width="48" height="80" fill="#fff"/><rect x="224" y="25" width="95" height="115" fill="#fff"/><rect x="330" y="45" width="68" height="95" fill="#fff"/><rect x="28" y="36" width="9" height="22" fill="#fff"/><rect x="94" y="16" width="9" height="22" fill="#fff"/><rect x="255" y="8" width="10" height="22" fill="#fff"/><rect x="280" y="8" width="10" height="22" fill="#fff"/><line x1="0" y1="140" x2="430" y2="140" stroke="#fff" stroke-width="1.5"/></svg>
+    <svg class="hero-hex" style="right:8px;top:8px;width:68px" viewBox="0 0 80 80"><polygon points="40,4 70,22 70,58 40,76 10,58 10,22" fill="none" stroke="#fff" stroke-width="2"/><polygon points="40,16 58,27 58,53 40,64 22,53 22,27" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="40" cy="40" r="8" fill="none" stroke="#fff" stroke-width="2"/></svg>
+    <div class="hero-content">
+      <div class="logo-badge">KBM</div>
+      <h1><span>KBM</span> Exim<br>International</h1>
+      <div class="hero-tag">Precision Fasteners &amp; Industrial Components</div>
+      <div class="hero-stats">
+        <div><div class="hstat-val">500+</div><div class="hstat-lbl">Products</div></div>
+        <div><div class="hstat-val">20+</div><div class="hstat-lbl">Countries</div></div>
+        <div><div class="hstat-val">ISO</div><div class="hstat-lbl">Certified</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="feat-strip">
+    <div class="feat-pill"><span class="fpill-dot"></span>Stainless Steel</div>
+    <div class="feat-pill"><span class="fpill-dot"></span>Carbon Steel</div>
+    <div class="feat-pill"><span class="fpill-dot"></span>Bulk Orders</div>
+    <div class="feat-pill"><span class="fpill-dot"></span>Custom Spec</div>
+    <div class="feat-pill"><span class="fpill-dot"></span>Export Ready</div>
+  </div>
+  <div class="sec-title">Featured Categories</div>
+  <div class="cat-grid">
+    <div class="cat-card c-bolts" id="hc-bolts"><div class="cat-icon">🔧</div><div class="cat-name">Bolts</div><div class="cat-count">6 Types · Detailed Pricing</div><div class="cat-arr">›</div></div>
+    <div class="cat-card c-nuts" id="hc-nuts"><div class="cat-icon">🔩</div><div class="cat-name">Nuts</div><div class="cat-count">7 Types · All Grades</div><div class="cat-arr">›</div></div>
+    <div class="cat-card c-washers" id="hc-washers"><div class="cat-icon">⚙️</div><div class="cat-name">Washers</div><div class="cat-count">9 Types · All Sizes</div><div class="cat-arr">›</div></div>
+    <div class="cat-card c-blades" id="hc-blades"><div class="cat-icon">🌾</div><div class="cat-name">Rotavator Blades</div><div class="cat-count">3 Types · Heavy Duty</div><div class="cat-arr">›</div></div>
+  </div>
+  <div class="sec-title" style="margin-top:6px">Why Choose Us</div>
+  <div class="why-grid">
+    <div class="why-card"><div class="why-icon">🏭</div><div class="why-title">Bulk Manufacturing</div><div class="why-desc">High-volume to global standards</div></div>
+    <div class="why-card"><div class="why-icon">✅</div><div class="why-title">Quality Assured</div><div class="why-desc">ISI, DIN, ASTM certified</div></div>
+    <div class="why-card"><div class="why-icon">🌍</div><div class="why-title">Global Export</div><div class="why-desc">Shipping to 20+ countries</div></div>
+    <div class="why-card"><div class="why-icon">⚡</div><div class="why-title">Fast Delivery</div><div class="why-desc">On-time dispatch always</div></div>
+  </div>
+  <div style="height:10px"></div>
+</div>
+
+<!-- ══ ABOUT ══ -->
+<div class="screen" id="s-about">
+  <div class="about-hero">
+    <div style="font-size:36px;margin-bottom:10px">🏭</div>
+    <h2>About KBM Exim International</h2>
+    <p>India's trusted manufacturer and exporter of precision fasteners and industrial components.</p>
+  </div>
+  <div class="metrics-row">
+    <div class="metric-box"><div class="metric-val">15+</div><div class="metric-lbl">Years Exp.</div></div>
+    <div class="metric-box"><div class="metric-val">500+</div><div class="metric-lbl">Products</div></div>
+    <div class="metric-box"><div class="metric-val">20+</div><div class="metric-lbl">Countries</div></div>
+  </div>
+  <div class="about-sec"><h3>Our Story</h3><p>KBM Exim International is a leading manufacturer and exporter of precision fasteners and industrial components. Based in India, we supply bolts, nuts, washers, and agricultural blades to clients across Asia, the Middle East, Africa, and Europe.</p></div>
+  <div class="about-sec"><h3>Our Core Values</h3><ul class="val-list"><li>Uncompromising quality in every product manufactured</li><li>Bulk production with consistent precision</li><li>Compliance with ISI, DIN, ASTM, and ISO standards</li><li>Transparent pricing and reliable export documentation</li><li>Customer-first approach with dedicated support</li></ul></div>
+  <div class="about-sec"><h3>Certifications</h3><p>All products undergo rigorous quality control before dispatch.</p><div class="cert-row"><div class="cert-badge">ISI</div><div class="cert-badge">DIN</div><div class="cert-badge">ASTM</div><div class="cert-badge">ISO 9001</div></div></div>
+  <div class="about-sec"><h3>Manufacturing Capability</h3><p>CNC machinery, cold-forging, and heat-treatment units producing M4–M48 fasteners. Daily output exceeds 50,000 units for on-schedule bulk delivery.</p></div>
+</div>
+
+<!-- ══ PRODUCTS ══ -->
+<div class="screen" id="s-products">
+  <div class="prod-header">
+    <h2 style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700">Products &amp; Pricing</h2>
+    <p style="font-size:11px;color:var(--silver);margin-top:3px">Tap any card for full specs · Scroll for price table</p>
+  </div>
+  <div class="cat-tabs-row">
+    <button class="cat-tab-btn active" data-cat="nuts">🔩 Nuts</button>
+    <button class="cat-tab-btn" data-cat="bolts">🔧 Bolts</button>
+    <button class="cat-tab-btn" data-cat="washers">⚙️ Washers</button>
+    <button class="cat-tab-btn" data-cat="blades">🌾 Blades</button>
+  </div>
+  <div id="prod-content"></div>
+</div>
+
+<!-- ══ REVIEWS ══ -->
+<div class="screen" id="s-reviews">
+  <div class="rev-hero">
+    <h2>Customer Reviews</h2>
+    <div style="display:flex;align-items:flex-start;gap:18px">
+      <div>
+        <div class="rating-big" id="avg-rating-val">4.8</div>
+        <div class="stars-row" id="avg-stars-row">★★★★★</div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:2px" id="rev-count-lbl">Loading…</div>
+      </div>
+      <div style="flex:1;padding-top:4px" id="rating-bars"></div>
+    </div>
+  </div>
+
+  <!-- Auth bar (logged-in user OR login button) -->
+  <div style="margin:10px 14px 0" id="auth-bar"></div>
+
+  <!-- Write review (shown when logged in) -->
+  <div id="write-review-wrap" style="display:none;margin:10px 14px 0">
+    <div class="write-review-box">
+      <div class="write-review-head">✍️ Write Your Review</div>
+      <div class="write-review-body">
+        <div style="margin-bottom:12px">
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:8px;letter-spacing:.5px;text-transform:uppercase">Your Rating</div>
+          <div id="star-picker">
+            <span class="star-pick" data-v="1">★</span>
+            <span class="star-pick" data-v="2">★</span>
+            <span class="star-pick" data-v="3">★</span>
+            <span class="star-pick" data-v="4">★</span>
+            <span class="star-pick" data-v="5">★</span>
+          </div>
+        </div>
+        <div class="f-field">
+          <label>Your Review</label>
+          <textarea id="rev-text-input" placeholder="Share your experience with KBM Exim products, quality, delivery…"></textarea>
+        </div>
+        <button class="submit-btn-full" id="post-review-btn">Post Review</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login prompt (shown when NOT logged in) -->
+  <div id="login-prompt-box" style="margin:10px 14px 0">
+    <div class="login-prompt-box">
+      <div style="font-size:28px;margin-bottom:8px">🔐</div>
+      <div style="font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:5px">Share Your Experience</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px">Login or sign up free to post a review</div>
+      <button class="submit-btn-full" onclick="openLoginModal()" style="width:auto;padding:9px 28px;margin:0 auto;display:inline-flex;border-radius:30px">🔑 Login / Sign Up</button>
+    </div>
+  </div>
+
+  <div style="height:6px"></div>
+  <div id="review-list"></div>
+</div>
+
+<!-- ══ CONTACT ══ -->
+<div class="screen" id="s-contact">
+  <div class="contact-hero">
+    <div style="font-size:32px;margin-bottom:8px">📞</div>
+    <h2>Contact Us</h2>
+    <p>Bulk orders, pricing &amp; export inquiries</p>
+  </div>
+  <div class="contact-card">
+    <div class="contact-item"><div class="ci-icon">🏢</div><div><div class="ci-lbl">Company</div><div class="ci-val">KBM Exim International</div></div></div>
+    <div class="contact-item" style="cursor:pointer" onclick="window.open('https://wa.me/918146059197','_blank')">
+      <div class="ci-icon" style="background:rgba(37,211,102,.15);border-color:rgba(37,211,102,.3)"><svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.11 1.523 5.84L.057 23.272a.5.5 0 0 0 .671.671l5.432-1.466A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.9a9.887 9.887 0 0 1-5.03-1.374l-.36-.214-3.733 1.008 1.026-3.635-.234-.374A9.868 9.868 0 0 1 2.1 12C2.1 6.534 6.534 2.1 12 2.1S21.9 6.534 21.9 12 17.466 21.9 12 21.9z"/></svg></div>
+      <div><div class="ci-lbl">WhatsApp / Phone</div><div class="ci-val" style="color:#25d366">+91 8146059197</div></div>
+      <div style="margin-left:auto;font-size:10px;color:#25d366;font-family:'Rajdhani',sans-serif;font-weight:700">TAP →</div>
+    </div>
+    <div class="contact-item"><div class="ci-icon">✉️</div><div><div class="ci-lbl">Email</div><div class="ci-val">exim3906@gmail.com</div></div></div>
+    <div class="contact-item"><div class="ci-icon">🌐</div><div><div class="ci-lbl">Export Markets</div><div class="ci-val">Asia · Middle East · Africa · Europe</div></div></div>
+  </div>
+  <div style="padding:0 14px 10px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <button class="wa-quick-btn" onclick="sendWA('Hello KBM Exim,\n\nI want to enquire about *Bolts* pricing and availability.\n\nKindly share details.')">🔧 Bolt Inquiry</button>
+    <button class="wa-quick-btn" onclick="sendWA('Hello KBM Exim,\n\nI want to enquire about *Nuts* pricing and availability.\n\nKindly share details.')">🔩 Nut Inquiry</button>
+    <button class="wa-quick-btn" onclick="sendWA('Hello KBM Exim,\n\nI want to enquire about *Washers* pricing and availability.\n\nKindly share details.')">⚙️ Washer Inquiry</button>
+    <button class="wa-quick-btn" onclick="sendWA('Hello KBM Exim,\n\nI want to enquire about *Rotavator Blades* pricing.\n\nKindly share details.')">🌾 Blade Inquiry</button>
+  </div>
+  <div class="contact-form-box">
+    <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.11 1.523 5.84L.057 23.272a.5.5 0 0 0 .671.671l5.432-1.466A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.9a9.887 9.887 0 0 1-5.03-1.374l-.36-.214-3.733 1.008 1.026-3.635-.234-.374A9.868 9.868 0 0 1 2.1 12C2.1 6.534 6.534 2.1 12 2.1S21.9 6.534 21.9 12 17.466 21.9 12 21.9z"/></svg> Send via WhatsApp</h3>
+    <div class="f-field"><label>Your Name</label><input type="text" id="c-name" placeholder="Enter your full name"></div>
+    <div class="f-field"><label>Your Phone</label><input type="text" id="c-phone" placeholder="+91 XXXXXXXXXX"></div>
+    <div class="f-field"><label>Message</label><textarea id="c-msg" placeholder="Product, quantity, size, grade, delivery location…"></textarea></div>
+    <button class="submit-btn-full wa-green" id="contact-submit">Send on WhatsApp</button>
+  </div>
+  <div style="text-align:center;padding:10px;font-size:11px;color:var(--text-muted)">Mon–Sat · 9 AM – 6 PM IST · Usually replies within 1 hour</div>
+</div>
+
+<!-- ══ DETAIL OVERLAY ══ -->
+<div class="detail-overlay" id="detail-overlay">
+  <div class="detail-top-bar">
+    <button class="back-btn" id="back-btn">← Back</button>
+    <div id="d-cat-badge" class="detail-cat-badge" style="margin:0"></div>
+  </div>
+  <div class="detail-img-box" id="d-img"></div>
+  <div class="detail-name" id="d-name"></div>
+  <div id="d-price-row"></div>
+  <div id="d-specs"></div>
+  <div class="inq-form">
+    <h3><svg width="15" height="15" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.11 1.523 5.84L.057 23.272a.5.5 0 0 0 .671.671l5.432-1.466A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.9a9.887 9.887 0 0 1-5.03-1.374l-.36-.214-3.733 1.008 1.026-3.635-.234-.374A9.868 9.868 0 0 1 2.1 12C2.1 6.534 6.534 2.1 12 2.1S21.9 6.534 21.9 12 17.466 21.9 12 21.9z"/></svg> Request Quote via WhatsApp</h3>
+    <div class="f-field"><label>Your Name</label><input type="text" id="inq-name" placeholder="Your name"></div>
+    <div class="f-field"><label>Your Phone</label><input type="text" id="inq-phone" placeholder="+91 XXXXXXXXXX"></div>
+    <div class="f-field"><label>Requirement</label><textarea id="inq-msg" placeholder="Quantity, size, grade, delivery location…"></textarea></div>
+    <button class="submit-btn-full wa-green" id="inq-submit">Send on WhatsApp</button>
+  </div>
+</div>
+
+<!-- ══ LOGIN MODAL ══ -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">🔐 KBM Exim Account</div>
+      <button class="modal-close" onclick="closeLoginModal()">✕</button>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Login</button>
+      <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+    <!-- LOGIN -->
+    <div id="form-login" class="auth-form-wrap">
+      <div class="f-field"><label>Name or Email</label><input type="text" id="l-ident" placeholder="Enter your name or email"></div>
+      <div class="f-field"><label>Password</label><input type="password" id="l-pass" placeholder="Your password"></div>
+      <div class="err-msg" id="login-err"></div>
+      <button class="submit-btn-full" id="do-login-btn" style="margin-top:6px">Login</button>
+      <div style="text-align:center;margin-top:10px;font-size:11px;color:var(--text-muted)">No account? <span style="color:var(--accent);cursor:pointer;font-weight:700" onclick="switchTab('signup')">Sign Up Free</span></div>
+    </div>
+    <!-- SIGNUP -->
+    <div id="form-signup" class="auth-form-wrap" style="display:none">
+      <div class="f-field"><label>Full Name</label><input type="text" id="s-name" placeholder="Your full name"></div>
+      <div class="f-field"><label>Company / Role (optional)</label><input type="text" id="s-role" placeholder="e.g. Purchase Manager, Delhi"></div>
+      <div class="f-field"><label>Email</label><input type="email" id="s-email" placeholder="your@email.com"></div>
+      <div class="f-field"><label>Password</label><input type="password" id="s-pass" placeholder="Create a password (min 4 chars)"></div>
+      <div class="err-msg" id="signup-err"></div>
+      <button class="submit-btn-full" id="do-signup-btn" style="margin-top:6px">Create Account</button>
+      <div style="text-align:center;margin-top:10px;font-size:11px;color:var(--text-muted)">Already have an account? <span style="color:var(--accent);cursor:pointer;font-weight:700" onclick="switchTab('login')">Login</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav-bar">
+  <button class="nav-btn active" data-screen="home"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" fill="#78909c"/></svg><span class="nav-lbl">Home</span></button>
+  <button class="nav-btn" data-screen="about"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#78909c"/><rect x="11" y="11" width="2" height="6" fill="#0a1628"/><rect x="11" y="7" width="2" height="2" fill="#0a1628"/></svg><span class="nav-lbl">About</span></button>
+  <button class="nav-btn" data-screen="products"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" fill="#78909c"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" stroke="#78909c" stroke-width="2" fill="none"/></svg><span class="nav-lbl">Products</span></button>
+  <button class="nav-btn" data-screen="reviews"><svg viewBox="0 0 24 24"><polygon points="12,2 15,8.5 22,9.5 17,14 18.5,21 12,17.5 5.5,21 7,14 2,9.5 9,8.5" fill="#78909c"/></svg><span class="nav-lbl">Reviews</span></button>
+  <button class="nav-btn" data-screen="contact"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.6 19.79 19.79 0 0 1 1.61 5a2 2 0 0 1 1.99-2H6.6a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 10.1a16 16 0 0 0 6 6l.94-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17.72z" fill="#78909c"/></svg><span class="nav-lbl">Contact</span></button>
+</nav>
+
+<div class="toast" id="toast">✓ Done!</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════
+var PROD_DATA={nuts:[{name:'Hexa Nut',icon:'🔩',desc:'Standard hexagonal nut, all grades',grade:'4/5/8/10',material:'Mild Steel / High Tensile',size:'M6–M20',finish:'Zinc/Plain/HDG',standard:'DIN 934/ISI',usage:'General purpose, machinery',price:'₹70–140',unit:'/kg',bulk:'₹60–120/kg (500kg+)'},{name:'Lock Nut (Nylock)',icon:'🔩',desc:'Nylon insert prevailing torque nut',grade:'8/10',material:'MS + Nylon Insert',size:'M8–M20',finish:'Zinc Yellow',standard:'DIN 985/ISO 7042',usage:'Vibrating assemblies, automotive',price:'₹120–220',unit:'/kg',bulk:'₹105–195/kg (500kg+)'},{name:'Wing Nut',icon:'🔩',desc:'Hand-tightenable butterfly nut',grade:'4',material:'Mild Steel / SS 304',size:'M6–M12',finish:'Zinc/Plain',standard:'DIN 315',usage:'Quick-release applications',price:'₹90–180',unit:'/kg',bulk:'₹75–155/kg (200kg+)'},{name:'Cap Nut (Acorn)',icon:'🔩',desc:'Closed-end decorative nut',grade:'6/8',material:'MS / SS 304',size:'M6–M20',finish:'Chrome/Zinc/Nickel',standard:'DIN 1587',usage:'Decorative, protection',price:'₹110–200',unit:'/kg',bulk:'₹95–175/kg (200kg+)'},{name:'Flange Nut',icon:'🔩',desc:'Hex nut with serrated washer base',grade:'8/10',material:'Mild Steel / HT',size:'M8–M24',finish:'Zinc Yellow/HDG',standard:'DIN 6923',usage:'Sheet metal, automotive',price:'₹100–190',unit:'/kg',bulk:'₹85–165/kg (500kg+)'},{name:'T Nut',icon:'🔩',desc:'T-slot barrel nut for fixture work',grade:'4/5',material:'Mild Steel',size:'M6–M20',finish:'Zinc/Plain',standard:'DIN 508',usage:'Machine tools, T-slot tables',price:'₹80–150',unit:'/kg',bulk:'₹68–128/kg (200kg+)'},{name:'Square Nut',icon:'🔩',desc:'Four-sided nut for T-slot & channel',grade:'4/5',material:'Mild Steel',size:'M6–M20',finish:'Plain/Zinc',standard:'DIN 562',usage:'Channel framing, fixtures',price:'₹75–130',unit:'/kg',bulk:'₹62–110/kg (500kg+)'},{name:'Coupling Nut',icon:'🔩',desc:'Long hex nut joining two rods',grade:'6/8',material:'MS/SS/Alloy',size:'M6–M36',finish:'Zinc/Plain',standard:'DIN 6334',usage:'Threaded rod extension',price:'₹85–160',unit:'/kg',bulk:'₹72–138/kg (200kg+)'}],bolts:[{name:'Carriage Bolt',icon:'🔧',desc:'Round head square neck bolt',grade:'4.6/8.8',material:'Mild Steel/HT',size:'M8×30–M16×150',finish:'Zinc/HDG',standard:'DIN 603',usage:'Timber, wood connections',price:'₹80–140',unit:'/kg',bulk:'₹68–118/kg (500kg+)'},{name:'Eye Bolt',icon:'🔧',desc:'Looped head bolt for lifting & rigging',grade:'6.8/8.8',material:'Mild Steel/HT',size:'M8–M30',finish:'Zinc/Black',standard:'DIN 580',usage:'Lifting, rigging, overhead loads',price:'₹120–250',unit:'/kg',bulk:'₹100–215/kg (200kg+)'},{name:'U Bolt',icon:'🔧',desc:'U-shaped pipe & tube clamp bolt',grade:'8.8/10.9',material:'MS/SS 304/316',size:'½"–3" Pipe',finish:'Zinc/Hot Dip Galv.',standard:'Custom/DIN',usage:'Pipelines, exhaust, clamping',price:'₹100–220',unit:'/kg',bulk:'₹85–190/kg (200kg+)'},{name:'Lag Bolt (Coach)',icon:'🔧',desc:'Heavy wood screw with hex head',grade:'4.6',material:'Mild Steel',size:'6×50–16×200mm',finish:'Zinc/Sherardized',standard:'DIN 571',usage:'Heavy timber, structural wood',price:'₹90–160',unit:'/kg',bulk:'₹75–135/kg (500kg+)'},{name:'Anchor Bolt',icon:'🔧',desc:'Foundation bolt for concrete anchoring',grade:'8.8/10.9',material:'Mild Steel/HT',size:'M12–M36',finish:'Plain/Epoxy/HDG',standard:'IS 5624/ASTM',usage:'Foundation, civil construction',price:'₹110–240',unit:'/kg',bulk:'₹92–205/kg (200kg+)'},{name:'Flange Bolt',icon:'🔧',desc:'Hex bolt with integral washer flange',grade:'8.8/10.9/12.9',material:'MS/HT/Alloy Steel',size:'M8–M30',finish:'Zinc/Black Oxide',standard:'DIN 6921',usage:'Automotive, sheet metal, flanges',price:'₹120–260',unit:'/kg',bulk:'₹100–225/kg (500kg+)'}],washers:[{name:'Flat Washer',icon:'⚙️',desc:'Plain disc for load distribution',grade:'Grade A',material:'Mild Steel/SS 304',size:'M4–M48',finish:'Zinc/Plain/HDG',standard:'DIN 125/IS 2016',usage:'General fastening',price:'₹55–220',unit:'/kg',bulk:'₹45–190/kg (1000kg+)'},{name:'Spring Washer',icon:'⚙️',desc:'Split helical to prevent loosening',grade:'Grade B',material:'Carbon Steel/SS 316',size:'M4–M36',finish:'Zinc/Black',standard:'DIN 127',usage:'Vibrating connections',price:'₹65–240',unit:'/kg',bulk:'₹55–205/kg (500kg+)'},{name:'Lock Washer',icon:'⚙️',desc:'External serrated locking washer',grade:'Grade A',material:'Hardened Steel',size:'M4–M30',finish:'Zinc Plated',standard:'DIN 6798',usage:'Bolted joints, automotive',price:'₹70–100',unit:'/kg',bulk:'₹58–85/kg (500kg+)'},{name:'Fender Washer',icon:'⚙️',desc:'Large OD washer for thin panels',grade:'Grade A',material:'Mild Steel/SS',size:'M5–M20',finish:'Zinc/Plain',standard:'ANSI B18.21',usage:'Automotive panels, bodywork',price:'₹60–90',unit:'/kg',bulk:'₹50–75/kg (500kg+)'},{name:'Tooth Washer',icon:'⚙️',desc:'Internal/external tooth lock washer',grade:'Grade A',material:'Carbon Steel',size:'M3–M24',finish:'Zinc Yellow',standard:'DIN 6797',usage:'Electrical grounding',price:'₹75–110',unit:'/kg',bulk:'₹62–92/kg (1000kg+)'},{name:'Sealing Washer',icon:'⚙️',desc:'Metal + rubber bonded seal washer',grade:'—',material:'MS+EPDM/Neoprene',size:'M6–M20',finish:'Plain/Zinc',standard:'DIN 7603',usage:'Plumbing, roofing, sealing',price:'₹90–140',unit:'/kg',bulk:'₹75–118/kg (500kg+)'},{name:'Wave Washer',icon:'⚙️',desc:'Corrugated spring effect washer',grade:'—',material:'Carbon Steel/SS',size:'M4–M25',finish:'Zinc/Plain',standard:'DIN 137',usage:'Bearings, preloading',price:'₹80–130',unit:'/kg',bulk:'₹68–110/kg (500kg+)'}],blades:[{name:'L Type Blade',icon:'🌾',desc:'Standard L-shaped rotavator blade',grade:'—',material:'Boron Steel/HC Steel',size:'200–280mm (Std & Custom)',finish:'Heat Treated',standard:'IS/OEM Spec',usage:'Standard tilling, rotavator',price:'₹180–300',unit:'/piece',bulk:'₹155–260/pc (50+)'},{name:'C Type Blade',icon:'🌾',desc:'C-shaped blade for secondary tillage',grade:'—',material:'Boron Steel',size:'220–300mm (Std & Custom)',finish:'Heat Treated',standard:'IS/OEM Spec',usage:'Secondary tillage, levelling',price:'₹200–350',unit:'/piece',bulk:'₹172–300/pc (50+)'},{name:'Maschio T Type',icon:'🌾',desc:'Heavy-duty imported spec blade',grade:'—',material:'Imported Boron Steel',size:'Maschio Std/Custom',finish:'Heat Treated+Shot Blast',standard:'Maschio OEM',usage:'Hard soil, heavy tilling',price:'₹350–600',unit:'/piece',bulk:'₹300–520/pc (20+)'}]};
+
+var NUTS_TABLE=[['Hexa Nut','4','Mild Steel','M6','145 kg','₹70–80/kg'],['Hexa Nut','4','Mild Steel','M8','315 kg','₹72–82/kg'],['Hexa Nut','5','Mild Steel','M10','620 kg','₹75–88/kg'],['Hexa Nut','5','Mild Steel','M12','1,050 kg','₹78–92/kg'],['Hexa Nut','8','High Tensile','M16','2,600 kg','₹90–110/kg'],['Hexa Nut','8','High Tensile','M20','5,100 kg','₹100–120/kg'],['Hexa Nut','10','High Tensile','M20','5,100 kg','₹120–140/kg'],['Lock Nut (Nylock)','8','MS+Nylon','M8','340 kg','₹120–145/kg'],['Lock Nut (Nylock)','8','MS+Nylon','M10','640 kg','₹130–155/kg'],['Lock Nut (Nylock)','8','MS+Nylon','M12','1,100 kg','₹140–170/kg'],['Lock Nut (Nylock)','10','MS+Nylon','M16','2,700 kg','₹170–200/kg'],['Lock Nut (Nylock)','10','MS+Nylon','M20','5,200 kg','₹190–220/kg'],['Wing Nut','4','Mild Steel','M6','85 kg','₹90–110/kg'],['Wing Nut','4','Mild Steel','M8','185 kg','₹100–130/kg'],['Wing Nut','4','SS 304','M10','380 kg','₹150–180/kg'],['Wing Nut','4','SS 304','M12','690 kg','₹160–180/kg'],['Cap Nut','6','Mild Steel','M6–M20','Varies','₹110–145/kg'],['Cap Nut','8','SS 304','M6–M16','Varies','₹165–200/kg'],['Flange Nut','8','Mild Steel','M8–M20','Varies','₹100–135/kg'],['Flange Nut','10','High Tensile','M10–M24','Varies','₹145–190/kg'],['T Nut','4','Mild Steel','M6–M16','Varies','₹80–110/kg'],['T Nut','5','Mild Steel','M8–M20','Varies','₹110–150/kg'],['Square Nut','4','Mild Steel','M6–M16','Varies','₹75–100/kg'],['Square Nut','5','Mild Steel','M8–M20','Varies','₹95–130/kg']];
+var BOLTS_TABLE=[['Carriage Bolt','4.6','Mild Steel','M8×30–M12×100','Plain/Zinc','₹80–95/kg'],['Carriage Bolt','8.8','High Tensile','M10×40–M16×150','Zinc/HDG','₹110–140/kg'],['Eye Bolt','6.8','Mild Steel','M8–M20','Zinc Plated','₹120–160/kg'],['Eye Bolt','8.8','High Tensile','M12–M30','Zinc/Black Oxide','₹180–250/kg'],['U Bolt','8.8','MS/SS 304','½"–2" Pipe','Plain/Zinc','₹100–150/kg'],['U Bolt','10.9','High Tensile','1"–3" Pipe','Hot Dip Galv.','₹165–220/kg'],['Lag Bolt','4.6','Mild Steel','6×50–12×150','Zinc Plated','₹90–120/kg'],['Lag Bolt','4.6','Mild Steel','12×150–16×200','HDG','₹130–160/kg'],['Anchor Bolt','8.8','Mild Steel','M12–M24','Plain/Epoxy','₹110–155/kg'],['Anchor Bolt','10.9','High Tensile','M16–M36','Hot Dip Galv.','₹175–240/kg'],['Flange Bolt','8.8','Mild Steel','M8–M20','Zinc Yellow','₹120–155/kg'],['Flange Bolt','10.9','High Tensile','M10–M24','Zinc/Black','₹175–215/kg'],['Flange Bolt','12.9','Alloy Steel','M12–M30','Black Oxide','₹220–260/kg']];
+var WASHERS_TABLE=[['Flat Washer','Mild Steel','M4–M48','Zinc Plated','DIN 125','₹55–80/kg'],['Flat Washer','SS 304','M4–M30','Plain/Polished','DIN 125','₹160–220/kg'],['Spring Washer','Carbon Steel','M4–M36','Zinc/Black','DIN 127','₹65–95/kg'],['Spring Washer','SS 316','M4–M24','Plain','DIN 127','₹175–240/kg'],['Lock Washer','Hardened Steel','M4–M30','Zinc Plated','DIN 6798','₹70–100/kg'],['Fender Washer','Mild Steel','M5–M20','Zinc Plated','ANSI B18.21','₹60–90/kg'],['Tooth Washer','Carbon Steel','M3–M24','Zinc Yellow','DIN 6797','₹75–110/kg'],['Sealing Washer','MS+EPDM','M6–M20','Plain','DIN 7603','₹90–140/kg'],['Wave Washer','Carbon/SS','M4–M25','Zinc/Plain','DIN 137','₹80–130/kg']];
+
+// Default reviews
+var DEFAULT_REVIEWS=[
+  {name:'Rajesh Kumar',role:'Procurement Manager, Delhi',rating:5,text:'KBM Exim has been our trusted fastener supplier for 3 years. Consistent quality, on-time delivery, and competitive pricing. The hex bolts we source in bulk have zero rejection rate.',color:'#1565c0',init:'RK',isDefault:true},
+  {name:'Mohammed Al-Farsi',role:'Construction Co., UAE',rating:5,text:'Excellent supplier! Ordered 10,000 anchor bolts for a foundation project. Every piece met DIN standard. Documentation for import was perfectly organized. Will order again.',color:'#4a148c',init:'MA',isDefault:true},
+  {name:'Priya Sharma',role:'Auto Parts Distributor, Mumbai',rating:5,text:'The Allen bolts and flange nuts are top quality. Grade 10.9 performance verified by our QC team. KBM\'s responsiveness to custom orders is outstanding.',color:'#1b5e20',init:'PS',isDefault:true},
+  {name:'Sunita Reddy',role:'Agricultural Machinery, Hyderabad',rating:5,text:'Switched to KBM for rotavator blades 2 seasons ago. L-type blades have better hardness and longer life. Highly recommended.',color:'#bf360c',init:'SR',isDefault:true},
+  {name:'Ahmed Hassan',role:'Industrial Trader, Egypt',rating:4,text:'Good product quality and fair bulk pricing. Packaging was robust with no damage during overseas shipping. Communication was prompt and professional.',color:'#006064',init:'AH',isDefault:true},
+  {name:'Vikram Singh',role:'Civil Contractor, Chandigarh',rating:5,text:'KBM\'s stud bolts for our pressure vessel project were certified and traceable. ASTM A193 B7 grade material test reports provided without any hassle.',color:'#4e342e',init:'VS',isDefault:true}
+];
+
+// Avatar colours pool
+var AVATAR_COLORS=['#1565c0','#4a148c','#1b5e20','#bf360c','#006064','#4e342e','#6a1b9a','#e65100','#37474f','#0277bd'];
+
+// ═══════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════
+function $(id){return document.getElementById(id);}
+
+function toast(msg,isErr){
+  var t=$('toast');
+  t.textContent=(isErr?'✖ ':'✓ ')+msg;
+  t.className='toast'+(isErr?' error':'');
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},3200);
+}
+
+function gb(g){return '<span class="grade-badge">'+g+'</span>';}
+function mc(m){var c='mat-ms';if(m.indexOf('High Tensile')>=0||m.indexOf('Alloy')>=0||m.indexOf('HT')>=0)c='mat-ht';if(m.indexOf('SS')>=0||m.indexOf('Stainless')>=0||m.indexOf('316')>=0||m.indexOf('304')>=0)c='mat-ss';if(m.indexOf('Boron')>=0||m.indexOf('Imported')>=0)c='mat-boron';return '<span class="'+c+'">'+m+'</span>';}
+function groupH(t,n){return '<tr class="group-head"><td colspan="'+n+'">'+t+'</td></tr>';}
+
+// ═══════════════════════════════════════════════════
+//  STORAGE (localStorage polyfill-safe)
+// ═══════════════════════════════════════════════════
+function store(key,val){try{localStorage.setItem('kbm_'+key,JSON.stringify(val));}catch(e){}}
+function load(key,def){try{var v=localStorage.getItem('kbm_'+key);return v!==null?JSON.parse(v):def;}catch(e){return def;}}
+
+// ═══════════════════════════════════════════════════
+//  AUTH
+// ═══════════════════════════════════════════════════
+var currentUser=load('user',null); // {name,role,email,password,color,init}
+
+function hashColor(str){var colors=AVATAR_COLORS;var h=0;for(var i=0;i<str.length;i++)h=(h*31+str.charCodeAt(i))%colors.length;return colors[Math.abs(h)];}
+
+function getInitials(name){var parts=name.trim().split(' ');return parts.length>=2?(parts[0][0]+parts[parts.length-1][0]).toUpperCase():name.substring(0,2).toUpperCase();}
+
+function updateAuthUI(){
+  var bar=$('auth-bar');
+  var writeWrap=$('write-review-wrap');
+  var loginBox=$('login-prompt-box');
+  if(currentUser){
+    bar.innerHTML='<div class="auth-user-bar">'+
+      '<div class="auth-avatar" style="background:'+currentUser.color+'">'+currentUser.init+'</div>'+
+      '<div style="flex:1;margin-left:10px"><div class="auth-name">'+currentUser.name+'</div><div class="auth-role">'+currentUser.role+'</div></div>'+
+      '<button class="logout-btn" onclick="doLogout()">Logout</button>'+
+      '</div>';
+    if(writeWrap)writeWrap.style.display='block';
+    if(loginBox)loginBox.style.display='none';
+  } else {
+    bar.innerHTML='';
+    if(writeWrap)writeWrap.style.display='none';
+    if(loginBox)loginBox.style.display='block';
+  }
+}
+
+function doLogout(){
+  currentUser=null;store('user',null);
+  updateAuthUI();toast('Logged out successfully.');
+}
+
+function openLoginModal(){$('login-modal').classList.add('open');}
+function closeLoginModal(){$('login-modal').classList.remove('open');clearAuthErrors();}
+function clearAuthErrors(){var e=$('login-err');var e2=$('signup-err');if(e)e.classList.remove('show');if(e2)e2.classList.remove('show');}
+
+function switchTab(tab){
+  $('tab-login').classList.toggle('active',tab==='login');
+  $('tab-signup').classList.toggle('active',tab==='signup');
+  $('form-login').style.display=tab==='login'?'block':'none';
+  $('form-signup').style.display=tab==='signup'?'block':'none';
+  clearAuthErrors();
+}
+
+// Sign up
+$('do-signup-btn').addEventListener('click',function(){
+  var name=$('s-name').value.trim();
+  var role=$('s-role').value.trim()||'KBM Customer';
+  var email=$('s-email').value.trim();
+  var pass=$('s-pass').value.trim();
+  var err=$('signup-err');
+  if(!name){err.textContent='Please enter your name.';err.classList.add('show');return;}
+  if(!email||email.indexOf('@')<0){err.textContent='Please enter a valid email.';err.classList.add('show');return;}
+  if(pass.length<4){err.textContent='Password must be at least 4 characters.';err.classList.add('show');return;}
+  // Check duplicate
+  var users=load('users',[]);
+  for(var i=0;i<users.length;i++){if(users[i].email===email){err.textContent='Email already registered. Please login.';err.classList.add('show');return;}}
+  var user={name:name,role:role,email:email,password:pass,color:hashColor(name),init:getInitials(name)};
+  users.push(user);
+  store('users',users);
+  currentUser=user;store('user',user);
+  closeLoginModal();updateAuthUI();
+  toast('Welcome, '+name+'! Account created.');
+  $('s-name').value='';$('s-role').value='';$('s-email').value='';$('s-pass').value='';
+});
+
+// Login
+$('do-login-btn').addEventListener('click',function(){
+  var ident=$('l-ident').value.trim();
+  var pass=$('l-pass').value.trim();
+  var err=$('login-err');
+  if(!ident||!pass){err.textContent='Please fill in all fields.';err.classList.add('show');return;}
+  var users=load('users',[]);
+  var found=null;
+  for(var i=0;i<users.length;i++){if((users[i].email===ident||users[i].name===ident)&&users[i].password===pass){found=users[i];break;}}
+  if(!found){err.textContent='Incorrect name/email or password.';err.classList.add('show');return;}
+  currentUser=found;store('user',found);
+  closeLoginModal();updateAuthUI();
+  toast('Welcome back, '+found.name+'!');
+  $('l-ident').value='';$('l-pass').value='';
+});
+
+// ═══════════════════════════════════════════════════
+//  REVIEWS
+// ═══════════════════════════════════════════════════
+var selectedStars=5;
+
+// Star picker
+document.querySelectorAll('.star-pick').forEach(function(s){
+  s.addEventListener('click',function(){
+    selectedStars=parseInt(this.dataset.v);
+    document.querySelectorAll('.star-pick').forEach(function(sp,i){sp.classList.toggle('active',i<selectedStars);});
+  });
+  s.addEventListener('mouseenter',function(){
+    var v=parseInt(this.dataset.v);
+    document.querySelectorAll('.star-pick').forEach(function(sp,i){sp.classList.toggle('active',i<v);});
+  });
+});
+document.getElementById('star-picker').addEventListener('mouseleave',function(){
+  document.querySelectorAll('.star-pick').forEach(function(sp,i){sp.classList.toggle('active',i<selectedStars);});
+});
+// Init 5 stars
+document.querySelectorAll('.star-pick').forEach(function(sp){sp.classList.add('active');});
+
+// Post review
+$('post-review-btn').addEventListener('click',function(){
+  if(!currentUser){toast('Please login first.',true);return;}
+  var text=$('rev-text-input').value.trim();
+  if(!text||text.length<10){toast('Please write at least 10 characters.',true);return;}
+  var reviews=load('user_reviews',[]);
+  var now=new Date();
+  var dateStr=now.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  reviews.unshift({name:currentUser.name,role:currentUser.role,rating:selectedStars,text:text,color:currentUser.color,init:currentUser.init,date:dateStr,uid:currentUser.email});
+  store('user_reviews',reviews);
+  $('rev-text-input').value='';
+  selectedStars=5;
+  document.querySelectorAll('.star-pick').forEach(function(sp){sp.classList.add('active');});
+  toast('Review posted! Thank you.');
+  renderReviews();
+});
+
+function deleteReview(idx){
+  var reviews=load('user_reviews',[]);
+  reviews.splice(idx,1);
+  store('user_reviews',reviews);
+  renderReviews();
+  toast('Review deleted.');
+}
+
+function renderReviews(){
+  var userRevs=load('user_reviews',[]);
+  var allRevs=userRevs.concat(DEFAULT_REVIEWS);
+  var total=allRevs.length;
+  // Compute average
+  var sum=0;allRevs.forEach(function(r){sum+=r.rating;});
+  var avg=total>0?(sum/total):4.8;
+  $('avg-rating-val').textContent=avg.toFixed(1);
+  // Stars
+  var fullStars=Math.round(avg);
+  $('avg-stars-row').textContent='★'.repeat(fullStars)+'☆'.repeat(5-fullStars);
+  $('rev-count-lbl').textContent=total+' reviews';
+
+  // Rating bars
+  var counts=[0,0,0,0,0];
+  allRevs.forEach(function(r){if(r.rating>=1&&r.rating<=5)counts[r.rating-1]++;});
+  $('rating-bars').innerHTML=[5,4,3,2,1].map(function(s){
+    var w=total>0?Math.round(counts[s-1]/total*100):0;
+    return '<div style="display:flex;align-items:center;gap:5px;margin-bottom:4px"><span style="font-size:9px;color:var(--text-muted);width:7px">'+s+'</span><div style="flex:1;height:4px;background:var(--steel3);border-radius:2px;overflow:hidden"><div style="width:'+w+'%;height:100%;background:#f57c00;border-radius:2px"></div></div><span style="font-size:9px;color:var(--text-muted);width:18px;text-align:right">'+counts[s-1]+'</span></div>';
+  }).join('');
+
+  // Review cards
+  var html='';
+  // User reviews first
+  userRevs.forEach(function(r,i){
+    html+='<div class="review-card user-review fade-in">'+
+      '<button class="del-review-btn" onclick="deleteReview('+i+')" title="Delete">✕</button>'+
+      '<div class="rev-top">'+
+        '<div class="rev-avatar" style="background:'+r.color+'">'+r.init+'</div>'+
+        '<div><div class="rev-name">'+r.name+'</div><div class="rev-role">'+r.role+'</div><div class="rev-stars">'+'★'.repeat(r.rating)+'☆'.repeat(5-r.rating)+'</div></div>'+
+      '</div>'+
+      '<div class="rev-text">'+escHtml(r.text)+'</div>'+
+      '<div style="display:flex;gap:0;flex-wrap:wrap;margin-top:7px">'+
+        '<span class="verified">✓ Verified Customer</span>'+
+        '<span class="new-badge">★ Customer Review</span>'+
+        (r.date?'<span style="font-size:9px;color:var(--text-muted);margin-left:8px;align-self:center">'+r.date+'</span>':'')+
+      '</div>'+
+    '</div>';
+  });
+  // Default reviews
+  DEFAULT_REVIEWS.forEach(function(r){
+    html+='<div class="review-card">'+
+      '<div class="rev-top">'+
+        '<div class="rev-avatar" style="background:'+r.color+'">'+r.init+'</div>'+
+        '<div><div class="rev-name">'+r.name+'</div><div class="rev-role">'+r.role+'</div><div class="rev-stars">'+'★'.repeat(r.rating)+'☆'.repeat(5-r.rating)+'</div></div>'+
+      '</div>'+
+      '<div class="rev-text">'+r.text+'</div>'+
+      '<span class="verified">✓ Verified Purchase</span>'+
+    '</div>';
+  });
+  $('review-list').innerHTML=html;
+}
+
+function escHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ═══════════════════════════════════════════════════
+//  PRODUCTS
+// ═══════════════════════════════════════════════════
+var currentCat='nuts';
+
+function renderProd(cat){
+  var items=PROD_DATA[cat];var h='';
+  h+='<div style="padding:10px 14px 6px">'+
+    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">'+
+      '<div style="width:3px;height:14px;background:var(--accent);border-radius:2px;flex-shrink:0"></div>'+
+      '<span style="font-family:\'Rajdhani\',sans-serif;font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--silver)">Products &amp; Unit Price</span>'+
+    '</div>'+
+    '<div class="prod-cards-grid">';
+  items.forEach(function(p,i){
+    h+='<div class="prod-card fade-in" style="animation-delay:'+(i*0.04)+'s" data-cat="'+cat+'" data-idx="'+i+'">'+
+      '<div class="prod-card-img">'+p.icon+'<span class="prod-card-badge">'+p.grade+'</span></div>'+
+      '<div class="prod-card-body">'+
+        '<div class="prod-card-name">'+p.name+'</div>'+
+        '<div class="prod-card-desc">'+p.desc+'</div>'+
+        '<div class="prod-card-price"><span class="prod-price-val">'+p.price+'</span><span class="prod-price-unit">'+p.unit+'</span></div>'+
+        '<button class="prod-card-btn">View Details</button>'+
+      '</div></div>';
+  });
+  h+='</div></div>';
+  h+='<div class="table-section">'+
+    '<div class="table-sec-head"><span class="table-sec-title">Detailed Price List</span></div>'+
+    '<div class="note-box"><strong>Note:</strong> Ex-works indicative prices. Final rate depends on quantity, grade &amp; coating. <strong>📞 +91 8146059197</strong> for best bulk quote.</div>';
+  if(cat==='nuts'){
+    h+='<div class="price-table-wrap"><table class="price-table"><thead><tr><th>Type</th><th>Grade</th><th>Material</th><th>Size</th><th>Wt/1000pc</th><th>₹/kg</th></tr></thead><tbody>';
+    var lN='';NUTS_TABLE.forEach(function(r){if(r[0]!==lN){h+=groupH(r[0],6);lN=r[0];}h+='<tr><td>'+r[0]+'</td><td>'+gb(r[1])+'</td><td>'+mc(r[2])+'</td><td>'+r[3]+'</td><td style="color:var(--text-muted)">'+r[4]+'</td><td class="price-cell">'+r[5]+'</td></tr>';});
+    h+='</tbody></table></div>';
+  } else if(cat==='bolts'){
+    h+='<div class="price-table-wrap"><table class="price-table"><thead><tr><th>Type</th><th>Grade</th><th>Material</th><th>Size</th><th>Coating</th><th>₹/kg</th></tr></thead><tbody>';
+    var lB='';BOLTS_TABLE.forEach(function(r){if(r[0]!==lB){h+=groupH(r[0],6);lB=r[0];}h+='<tr><td>'+r[0]+'</td><td>'+gb(r[1])+'</td><td>'+mc(r[2])+'</td><td>'+r[3]+'</td><td style="color:var(--text-muted)">'+r[4]+'</td><td class="price-cell">'+r[5]+'</td></tr>';});
+    h+='</tbody></table></div>';
+  } else if(cat==='washers'){
+    h+='<div class="price-table-wrap"><table class="price-table"><thead><tr><th>Type</th><th>Material</th><th>Size</th><th>Finish</th><th>Std</th><th>₹/kg</th></tr></thead><tbody>';
+    WASHERS_TABLE.forEach(function(r){h+='<tr><td>'+r[0]+'</td><td>'+mc(r[1])+'</td><td>'+r[2]+'</td><td style="color:var(--text-muted)">'+r[3]+'</td><td style="color:var(--text-muted)">'+r[4]+'</td><td class="price-cell">'+r[5]+'</td></tr>';});
+    h+='</tbody></table></div>';
+  } else if(cat==='blades'){
+    var bd=[{hrc:'48–52',hpct:80,tags:[],desc:'L-shaped blade for standard rotavator. Heat-treated for long service life.'},{hrc:'48–52',hpct:80,tags:[],desc:'C-shaped blade for secondary tillage and levelling. Broader cutting arc.'},{hrc:'50–55',hpct:92,tags:['Heavy Duty','Imported Steel'],desc:'Premium heavy-duty Maschio-compatible blade. Imported boron steel for superior wear resistance in hard soils.'}];
+    PROD_DATA.blades.forEach(function(b,i){
+      var bdi=bd[i];var tags='';
+      bdi.tags.forEach(function(t){tags+=t==='Heavy Duty'?'<span class="tag-heavy">'+t+'</span>':'<span class="tag-imported">'+t+'</span>';});
+      h+='<div class="blade-card">'+
+        '<div class="blade-card-head"><div><div class="blade-name">'+b.icon+' '+b.name+'</div>'+tags+'</div><div class="blade-price-tag">'+b.price+'<span style="font-size:10px;color:var(--text-muted)"> '+b.unit+'</span></div></div>'+
+        '<div class="blade-specs">'+
+          '<div class="blade-spec"><div class="blade-spec-label">Material</div><div class="blade-spec-val mat-boron">'+b.material+'</div></div>'+
+          '<div class="blade-spec"><div class="blade-spec-label">Hardness</div><div class="blade-spec-val">'+bdi.hrc+' HRC<div class="hardness-bar" style="width:'+bdi.hpct+'%"></div></div></div>'+
+          '<div class="blade-spec"><div class="blade-spec-label">Size</div><div class="blade-spec-val">'+b.size+'</div></div>'+
+          '<div class="blade-spec"><div class="blade-spec-label">Bulk Price</div><div class="blade-spec-val" style="color:var(--accent)">'+b.bulk+'</div></div>'+
+        '</div>'+
+        '<div class="blade-desc">'+bdi.desc+'</div>'+
+        '<div class="blade-footer"><span style="font-size:10px;color:var(--text-muted)">'+b.bulk+'</span>'+
+          '<button class="get-quote-btn" onclick="sendWA(\'Hello KBM Exim,\\n\\nI am interested in: *'+b.name+'*\\nPlease share pricing, availability and minimum order quantity.\')">📲 WhatsApp Quote</button>'+
+        '</div></div>';
+    });
+    h+='<div class="price-table-wrap"><table class="price-table"><thead><tr><th>Type</th><th>Material</th><th>Hardness</th><th>Weight</th><th>₹/piece</th></tr></thead><tbody>'+
+      '<tr><td>L Type</td><td class="mat-boron">Boron/HC Steel</td><td>48–52 HRC</td><td>0.8–1.2 kg</td><td class="price-cell">₹180–300</td></tr>'+
+      '<tr><td>C Type</td><td class="mat-boron">Boron Steel</td><td>48–52 HRC</td><td>1.0–1.5 kg</td><td class="price-cell">₹200–350</td></tr>'+
+      '<tr><td>Maschio T</td><td class="mat-boron">Imported Boron</td><td>50–55 HRC</td><td>1.5–2.2 kg</td><td class="price-cell">₹350–600</td></tr>'+
+      '</tbody></table></div>';
+  }
+  h+='</div><div style="height:12px"></div>';
+  $('prod-content').innerHTML=h;
+  document.querySelectorAll('.prod-card').forEach(function(card){
+    card.addEventListener('click',function(){openDetail(this.dataset.cat,parseInt(this.dataset.idx));});
+  });
+}
+
+function openDetail(cat,idx){
+  var p=PROD_DATA[cat][idx];
+  $('d-cat-badge').textContent=cat.charAt(0).toUpperCase()+cat.slice(1);
+  $('d-img').textContent=p.icon;$('d-name').textContent=p.name;
+  $('d-price-row').innerHTML='<div class="detail-price-row">'+
+    '<div class="dprice-box"><div class="dprice-label">Unit Price</div><div class="dprice-val">'+p.price+'</div><div class="dprice-sub">'+p.unit+'</div></div>'+
+    '<div class="dprice-box"><div class="dprice-label">Bulk Price</div><div class="dprice-val" style="font-size:14px">'+p.bulk+'</div><div class="dprice-sub">On bulk orders</div></div>'+
+    '</div>';
+  $('d-specs').innerHTML='<div class="d-section"><div class="d-sec-head">📊 Specifications</div>'+
+    sr('Grade',p.grade)+sr('Material',p.material)+sr('Size Range',p.size)+sr('Finish',p.finish)+sr('Standard',p.standard)+sr('Usage',p.usage)+
+    '</div>';
+  var ov=$('detail-overlay');ov.classList.add('active');ov.scrollTop=0;
+}
+function sr(l,v){return '<div class="spec-row"><span class="spec-label">'+l+'</span><span class="spec-val">'+v+'</span></div>';}
+
+// ═══════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════
+function goTo(name){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  var t=$('s-'+name);if(t)t.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.toggle('active',b.dataset.screen===name);});
+  if(name==='products')renderProd(currentCat);
+  if(name==='reviews'){updateAuthUI();renderReviews();}
+}
+
+document.querySelectorAll('.nav-btn').forEach(function(btn){btn.addEventListener('click',function(){goTo(this.dataset.screen);});});
+
+function bindCat(id,cat){
+  var el=$(id);
+  if(el)el.addEventListener('click',function(){currentCat=cat;goTo('products');
+    setTimeout(function(){document.querySelectorAll('.cat-tab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.cat===cat);});renderProd(cat);},60);
+  });
+}
+bindCat('hc-bolts','bolts');bindCat('hc-nuts','nuts');bindCat('hc-washers','washers');bindCat('hc-blades','blades');
+
+document.querySelectorAll('.cat-tab-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.cat-tab-btn').forEach(function(b){b.classList.remove('active');});
+    this.classList.add('active');currentCat=this.dataset.cat;renderProd(currentCat);$('s-products').scrollTop=0;
+  });
+});
+
+$('back-btn').addEventListener('click',function(){$('detail-overlay').classList.remove('active');});
+
+// ═══════════════════════════════════════════════════
+//  WHATSAPP
+// ═══════════════════════════════════════════════════
+var WA_NUM='918146059197';
+function sendWA(msg){window.open('https://wa.me/'+WA_NUM+'?text='+encodeURIComponent(msg),'_blank');}
+
+$('contact-submit').addEventListener('click',function(){
+  var name=($('c-name')&&$('c-name').value.trim())||'Not provided';
+  var phone=($('c-phone')&&$('c-phone').value.trim())||'Not provided';
+  var msg=($('c-msg')&&$('c-msg').value.trim())||'General inquiry';
+  if(name==='Not provided'&&msg==='General inquiry'){toast('Please fill in your name and message.',true);return;}
+  sendWA('Hello KBM Exim International,\n\nNew inquiry from the app:\n\n👤 Name: '+name+'\n📞 Phone: '+phone+'\n📝 Message: '+msg+'\n\nPlease share pricing and availability.');
+});
+
+$('inq-submit').addEventListener('click',function(){
+  var prodName=$('d-name')?$('d-name').textContent:'Product';
+  var name=($('inq-name')&&$('inq-name').value.trim())||'Not provided';
+  var phone=($('inq-phone')&&$('inq-phone').value.trim())||'Not provided';
+  var msg=($('inq-msg')&&$('inq-msg').value.trim())||'Please share pricing.';
+  sendWA('Hello KBM Exim International,\n\nProduct Inquiry: *'+prodName+'*\n\n👤 Name: '+name+'\n📞 Phone: '+phone+'\n📝 Requirement: '+msg+'\n\nKindly share best price and availability.');
+});
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+renderProd('nuts');
+</script>
+</div>
+</body>
+</html>
